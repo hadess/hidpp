@@ -111,3 +111,38 @@ void IIllumination::setColorTemperature(uint16_t value)
 	writeBE<uint16_t> (params, 0, value);
 	call (SetColorTemperature, params);
 }
+
+bool IIllumination::illuminationChangeEvent (const HIDPP::Report &event)
+{
+	assert (event.function () == IIllumination::IlluminationChangeEvent);
+	auto params = event.parameterBegin ();
+	return readLE<uint8_t> (params) != 0;
+}
+
+uint16_t IIllumination::brightnessChangeEvent (const HIDPP::Report &event)
+{
+	assert (event.function () == IIllumination::BrightnessChangeEvent);
+	auto params = event.parameterBegin ();
+	return readBE<uint16_t> (params);
+}
+
+uint16_t IIllumination::colorTemperatureChangeEvent (const HIDPP::Report &event)
+{
+	assert (event.function () == IIllumination::ColorTemperatureChangeEvent);
+	auto params = event.parameterBegin ();
+	return readBE<uint16_t> (params);
+}
+
+uint16_t IIllumination::brightnessEffectiveMaxChangeEvent (const HIDPP::Report &event)
+{
+	assert (event.function () == IIllumination::BrightnessEffectiveMaxChangeEvent);
+	auto params = event.parameterBegin ();
+	return readBE<uint16_t> (params);
+}
+
+uint16_t IIllumination::brightnessClampedEvent (const HIDPP::Report &event)
+{
+	assert (event.function () == IIllumination::BrightnessClampedEvent);
+	auto params = event.parameterBegin ();
+	return readBE<uint16_t> (params);
+}

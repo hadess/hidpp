@@ -48,6 +48,14 @@ public:
 		GetBrightnessEffectiveMax = 12,
 	};
 
+	enum Event {
+		IlluminationChangeEvent = 0,
+		BrightnessChangeEvent = 1,
+		ColorTemperatureChangeEvent = 2,
+		BrightnessEffectiveMaxChangeEvent = 3,
+		BrightnessClampedEvent = 4,
+	};
+
 	enum Flags {
 		hasEvents = 1 << 0,
 		hasLinearLevels = 1 << 1,
@@ -110,6 +118,33 @@ public:
 	 * Set the Illumination color temperature.
 	 */
 	void setColorTemperature(uint16_t value);
+
+	/**
+	 * Parse an illumination change event.
+	 */
+	static bool illuminationChangeEvent (const HIDPP::Report &event);
+
+	/**
+	 * Parse a brightness change event.
+	 */
+	static uint16_t brightnessChangeEvent (const HIDPP::Report &event);
+
+	/**
+	 * Parse a color temperature change event.
+	 */
+	static uint16_t colorTemperatureChangeEvent (const HIDPP::Report &event);
+
+	/**
+	 * Parse a change in the effective maximum brightness.
+	 */
+	static uint16_t brightnessEffectiveMaxChangeEvent (const HIDPP::Report &event);
+
+	/**
+	 * Parse a notification of a recent request to set the
+	 * brightness to a value larger than the current effective
+	 * maximum brightness.
+	 */
+	static uint16_t brightnessClampedEvent (const HIDPP::Report &event);
 };
 
 }
