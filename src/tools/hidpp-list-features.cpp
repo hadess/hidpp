@@ -59,6 +59,7 @@ static const std::map<uint16_t, const char *> HIDPP20Features = {
 	{ 0x1981, "Backlight" },
 	{ 0x1982, "Backlight" },
 	{ 0x1983, "Backlight" },
+	{ 0x1990, "Illumination Light control" },
 	{ 0x1a00, "Presenter control" },
 	{ 0x1a01, "3D sensor" },
 	{ 0x1b00, "Reprog controls" },
