@@ -48,6 +48,21 @@ public:
 		GetBrightnessEffectiveMax = 12,
 	};
 
+	enum Flags {
+		hasEvents = 1 << 0,
+		hasLinearLevels = 1 << 1,
+		hasNonLinearLevels = 1 << 2,
+		hasDynamicMaximum = 1 << 3,
+	};
+
+	struct Info {
+		uint8_t flags;
+		uint16_t min;
+		uint16_t max;
+		uint16_t res;
+		unsigned int maxLevels : 4;
+	};
+
 	IIllumination (Device *dev);
 
 	/**
@@ -59,6 +74,42 @@ public:
 	 * Set the current Illumination state.
 	 */
 	void setIllumination(bool state);
+
+	/**
+	 * Get information about brightness.
+	 */
+	Info getBrightnessInfo(void);
+
+	/**
+	 * Get the current Illumination brightness.
+	 */
+	uint16_t getBrightness(void);
+
+	/**
+	 * Get the maximum brightness based on hardware limits,
+	 * 0 means the max value from getBrightnessInfo().
+	 */
+	uint16_t getBrightnessEffectiveMax(void);
+
+	/**
+	 * Set the Illumination brightness.
+	 */
+	void setBrightness(uint16_t value);
+
+	/**
+	 * Get information about color temperature.
+	 */
+	Info getColorTemperatureInfo(void);
+
+	/**
+	 * Get the current Illumination color temperature.
+	 */
+	uint16_t getColorTemperature(void);
+
+	/**
+	 * Set the Illumination color temperature.
+	 */
+	void setColorTemperature(uint16_t value);
 };
 
 }

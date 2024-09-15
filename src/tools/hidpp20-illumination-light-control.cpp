@@ -32,7 +32,7 @@ using namespace HIDPP20;
 
 int main (int argc, char *argv[])
 {
-	static const char *args = "device_path state|toggle [params...]";
+	static const char *args = "device_path state|toggle|brightness|temp [params...]";
 	HIDPP::DeviceIndex device_index = HIDPP::DefaultDevice;
 
 	std::vector<Option> options = {
@@ -81,6 +81,46 @@ int main (int argc, char *argv[])
 		else if (op == "toggle") {
 			bool state = ill.getIllumination();
 			ill.setIllumination(!state);
+		}
+		else if (op == "brightness") {
+			if (argc-first_arg < 1) {
+				uint16_t value = ill.getBrightness();
+				std::cout << "\tbrightness: " << value << std::endl;
+				IIllumination::Info info = ill.getBrightnessInfo();
+				std::cout << "\tmin: " << info.min << std::endl;
+				std::cout << "\tmax: " << info.max << std::endl;
+				std::cout << "\tres: " << info.res << std::endl;
+				value = ill.getBrightnessEffectiveMax();
+				std::cout << "\teffective max: " << (value != 0 ? value : info.max)  << std::endl;
+			}
+			else {
+				char *endptr;
+				long new_value = strtol (argv[first_arg], &endptr, 0);
+				if (*endptr != '\0' || new_value < 0 || new_value > UINT16_MAX) {
+					std::cerr << "Invalid brightness value." << std::endl;
+					return EXIT_FAILURE;
+				}
+				ill.setBrightness(new_value);
+			}
+		}
+		else if (op == "temp") {
+			if (argc-first_arg < 1) {
+				uint16_t value = ill.getColorTemperature();
+				std::cout << "\ttemperature: " << value << std::endl;
+				IIllumination::Info info = ill.getColorTemperatureInfo();
+				std::cout << "\tmin: " << info.min << std::endl;
+				std::cout << "\tmax: " << info.max << std::endl;
+				std::cout << "\tres: " << info.res << std::endl;
+			}
+			else {
+				char *endptr;
+				long new_value = strtol (argv[first_arg], &endptr, 0);
+				if (*endptr != '\0' || new_value < 0 || new_value > UINT16_MAX) {
+					std::cerr << "Invalid color temperature value." << std::endl;
+					return EXIT_FAILURE;
+				}
+				ill.setColorTemperature(new_value);
+			}
 		}
 		else {
 			std::cerr << "Invalid operation: " << op << "." << std::endl;

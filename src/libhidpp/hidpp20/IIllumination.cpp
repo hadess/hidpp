@@ -44,3 +44,70 @@ void IIllumination::setIllumination(bool state)
 	writeLE<uint8_t> (params, 0, state);
 	call (SetIllumination, params);
 }
+
+IIllumination::Info IIllumination::getBrightnessInfo(void)
+{
+	std::vector<uint8_t> params (16), results;
+	results = call (GetBrightnessInfo, params);
+	return Info {
+		(uint8_t)(readLE<uint8_t> (results, 0) & 0x0f), // capabilities
+		readBE<uint16_t> (results, 1),      // min
+		readBE<uint16_t> (results, 3),      // max
+		readBE<uint16_t> (results, 5),      // res
+		(uint8_t)(readLE<uint8_t> (results, 7) & 0x0f), // maxLevels
+	};
+}
+
+uint16_t IIllumination::getBrightness(void)
+{
+	uint16_t value;
+	std::vector<uint8_t> params (16), results;
+	results = call (GetBrightness, params);
+	value = readBE<uint16_t> (results, 0);
+	return value;
+}
+
+uint16_t IIllumination::getBrightnessEffectiveMax(void)
+{
+	uint16_t value;
+	std::vector<uint8_t> params (16), results;
+	results = call (GetBrightnessEffectiveMax, params);
+	value = readBE<uint16_t> (results, 0);
+	return value;
+}
+
+void IIllumination::setBrightness(uint16_t value)
+{
+	std::vector<uint8_t> params (16);
+	writeBE<uint16_t> (params, 0, value);
+	call (SetBrightness, params);
+}
+
+IIllumination::Info IIllumination::getColorTemperatureInfo(void)
+{
+	std::vector<uint8_t> params (16), results;
+	results = call (GetColorTemperatureInfo, params);
+	return Info {
+		(uint8_t)(readLE<uint8_t> (results, 0) & 0x0f), // capabilities
+		readBE<uint16_t> (results, 1),      // min
+		readBE<uint16_t> (results, 3),      // max
+		readBE<uint16_t> (results, 5),      // res
+		(uint8_t)(readLE<uint8_t> (results, 7) & 0x0f), // maxLevels
+	};
+}
+
+uint16_t IIllumination::getColorTemperature(void)
+{
+	uint16_t value;
+	std::vector<uint8_t> params (16), results;
+	results = call (GetColorTemperature, params);
+	value = readBE<uint16_t> (results, 0);
+	return value;
+}
+
+void IIllumination::setColorTemperature(uint16_t value)
+{
+	std::vector<uint8_t> params (16);
+	writeBE<uint16_t> (params, 0, value);
+	call (SetColorTemperature, params);
+}
