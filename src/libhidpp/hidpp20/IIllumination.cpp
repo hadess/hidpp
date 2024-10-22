@@ -17,6 +17,7 @@
  */
 
 #include <hidpp20/IIllumination.h>
+#include <hidpp20/Error.h>
 
 #include <misc/Endian.h>
 
@@ -71,8 +72,15 @@ uint16_t IIllumination::getBrightnessEffectiveMax(void)
 {
 	uint16_t value;
 	std::vector<uint8_t> params (16), results;
-	results = call (GetBrightnessEffectiveMax, params);
-	value = readBE<uint16_t> (results, 0);
+	try {
+		results = call (GetBrightnessEffectiveMax, params);
+		value = readBE<uint16_t> (results, 0);
+	}
+	catch (HIDPP20::Error &e) {
+		if (e.errorCode () == HIDPP20::Error::InvalidFunctionID)
+			value = 0;
+		else throw e;
+	}
 	return value;
 }
 
